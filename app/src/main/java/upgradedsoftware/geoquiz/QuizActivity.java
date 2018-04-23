@@ -13,6 +13,7 @@ import android.widget.Toast;
 public class QuizActivity extends AppCompatActivity {
 
     private static final String TAG = "QuizActivity";
+    private static final String KEY_INDEX = "index";
     private Button mTrueButton;
     private Button mFalseButton;
     private ImageButton mNextImageButton;
@@ -29,6 +30,8 @@ public class QuizActivity extends AppCompatActivity {
     };
 
     private int mCurrentIndex = 0;
+    private int USER_POINTS = 0;
+
 
 
     @Override
@@ -36,6 +39,10 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate(Bundle) called");
         setContentView(R.layout.activity_quiz);
+
+        if (savedInstanceState != null){
+            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+        }
 
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
         mQuestionTextView.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +109,14 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        Log.i(TAG, "onSaveInstanceState");
+        savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
+    }
+
+
+    @Override
     public void onStop(){
         super.onStop();
         Log.d(TAG, "onStop() called");
@@ -115,15 +130,33 @@ public class QuizActivity extends AppCompatActivity {
 
 
 
+    private void disableButtons(){
+        mFalseButton.setEnabled(false);
+        mTrueButton.setEnabled(false);
+    }
+
+    private void enableButtons(){
+        mFalseButton.setEnabled(true);
+        mTrueButton.setEnabled(true);
+    }
+
 
 
     private void nextQuestion(int where){
         if (mCurrentIndex == 0 && where == -1) {
             where = 0;
         }
+        if (mQuestionsBank.length == (mCurrentIndex + where)){
+            Toast myToast = Toast.makeText(QuizActivity.this,R.string.result_toast,Toast.LENGTH_SHORT);
+            myToast.setGravity(Gravity.BOTTOM|Gravity.CENTER_HORIZONTAL,0,0);
+            myToast.show();
+
+            USER_POINTS = 0;
+        }
         mCurrentIndex = (mCurrentIndex + where) % mQuestionsBank.length;
         int question = mQuestionsBank[mCurrentIndex].getTextResId();
         updateQuestion();
+        enableButtons();
     }
 
 
@@ -139,14 +172,19 @@ public class QuizActivity extends AppCompatActivity {
         int messageResId = 0;
 
         if (userPressedTrue == answerIsTrue) {
+
             Toast myToast = Toast.makeText(QuizActivity.this,R.string.correct_toast,Toast.LENGTH_SHORT);
             myToast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL,0,0);
             myToast.show();
+
+            USER_POINTS++;
+            disableButtons();
         }
         else{
             Toast myToast = Toast.makeText(QuizActivity.this,R.string.incorrect_toast,Toast.LENGTH_SHORT);
             myToast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL,0,0);
             myToast.show();
+            disableButtons();
         }
     }
 
