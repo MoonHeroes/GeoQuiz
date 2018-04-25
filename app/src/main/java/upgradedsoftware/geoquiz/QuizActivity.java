@@ -18,6 +18,7 @@ public class QuizActivity extends AppCompatActivity {
     private Button mTrueButton;
     private Button mFalseButton;
     private Button mCheatButton;
+
     private ImageButton mNextImageButton;
     private ImageButton mBackImageButton;
     private TextView mQuestionTextView;
@@ -33,6 +34,8 @@ public class QuizActivity extends AppCompatActivity {
 
     private int mCurrentIndex = 0;
     private int USER_POINTS = 0;
+    private int REQUEST_CODE_CHEAT = 0;
+    private boolean mIsCheater;
 
 
 
@@ -70,7 +73,7 @@ public class QuizActivity extends AppCompatActivity {
             public void onClick(View v){
                 boolean answerIsTrue = mQuestionsBank[mCurrentIndex].isAnswerTrue();
                 Intent intent = CheatActivity.newIntent(QuizActivity.this, answerIsTrue);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_CHEAT);
             }
         });
 
