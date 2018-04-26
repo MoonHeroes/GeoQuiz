@@ -13,7 +13,11 @@ public class CheatActivity extends AppCompatActivity {
     private static final String EXTRA_ANSWER_IS_TRUE = "com.upgradedsoftware.android.geoquiz.answer_is_true";
     private static final String EXTRA_ANSWER_SHOWN = "com.upgradedsoftware.android.geoquiz.answer_shown";
 
+    private static final String CHEAT_ANSWER_INDEX = "cheat";
+
     private boolean mAnswerIsTrue;
+    private boolean mAnswerCheated;
+
     private TextView mAnswerTextView;
     private Button mShowAnswerButton;
 
@@ -23,7 +27,7 @@ public class CheatActivity extends AppCompatActivity {
         return intent;
     }
     public static boolean wasAnswerShown(Intent result){
-        return result.getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false);
+        return result.getBooleanExtra(EXTRA_ANSWER_SHOWN, false);
     }
 
 
@@ -32,8 +36,13 @@ public class CheatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cheat);
 
-        mAnswerIsTrue = getIntent().getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false);
+        if (savedInstanceState != null){
+            mAnswerCheated = savedInstanceState.getBoolean(CHEAT_ANSWER_INDEX);
+        }
 
+        setAnswerShownResult();
+
+        mAnswerIsTrue = getIntent().getBooleanExtra(EXTRA_ANSWER_IS_TRUE, false);
         mAnswerTextView =(TextView) findViewById(R.id.answer_text_view);
         mShowAnswerButton = (Button) findViewById(R.id.show_answer_button);
         mShowAnswerButton.setOnClickListener(new View.OnClickListener() {
@@ -44,14 +53,21 @@ public class CheatActivity extends AppCompatActivity {
                 } else {
                     mAnswerTextView.setText(R.string.false_button);
                 }
-                setAnswerShownResult(true);
+                mAnswerCheated = true;
+                setAnswerShownResult();
             }
         });
     }
 
-    private void setAnswerShownResult(boolean isAnswerShown){
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putBoolean(CHEAT_ANSWER_INDEX, mAnswerCheated);
+    }
+
+    private void setAnswerShownResult(){
         Intent data = new Intent();
-        data.putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown);
+        data.putExtra(EXTRA_ANSWER_SHOWN, mAnswerCheated);
         setResult(RESULT_OK, data);
     }
 }
