@@ -16,13 +16,17 @@ public class CheatActivity extends AppCompatActivity {
 
     private static final String EXTRA_ANSWER_IS_TRUE = "com.upgradedsoftware.android.geoquiz.answer_is_true";
     private static final String EXTRA_ANSWER_SHOWN = "com.upgradedsoftware.android.geoquiz.answer_shown";
-
     private static final String CHEAT_ANSWER_INDEX = "cheat";
+    private static final String CHEAT_COUNT = "count";
 
     private boolean mAnswerIsTrue;
     private boolean mAnswerCheated;
 
     private TextView mAnswerTextView;
+    private TextView mApiTextView;
+
+    private int mCheatCount;
+
     private Button mShowAnswerButton;
 
     public static Intent newIntent (Context packageContext, boolean answerIsTrue) {
@@ -84,6 +88,7 @@ public class CheatActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle savedInstanceState){
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putBoolean(CHEAT_ANSWER_INDEX, mAnswerCheated);
+        savedInstanceState.putInt(CHEAT_COUNT, mCheatCount);
     }
 
     private void setAnswerShownResult(){

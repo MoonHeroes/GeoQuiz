@@ -16,13 +16,16 @@ public class QuizActivity extends AppCompatActivity {
 
     private static final String TAG = "QuizActivity";
     private static final String KEY_INDEX = "index";
+
     private Button mTrueButton;
     private Button mFalseButton;
     private Button mCheatButton;
 
     private ImageButton mNextImageButton;
     private ImageButton mBackImageButton;
+
     private TextView mQuestionTextView;
+
 
     private Question[] mQuestionsBank = new Question[]{
             new Question(R.string.question_australia, true),
@@ -51,6 +54,10 @@ public class QuizActivity extends AppCompatActivity {
             mIsCheater = savedInstanceState.getBoolean(KEY_INDEX);
         }
 
+
+
+
+
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
         mQuestionTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,8 +65,6 @@ public class QuizActivity extends AppCompatActivity {
                 nextQuestion(1);
             }
         });
-
-
 
         mTrueButton = (Button) findViewById(R.id.true_button);
         mTrueButton.setOnClickListener(new View.OnClickListener() {
